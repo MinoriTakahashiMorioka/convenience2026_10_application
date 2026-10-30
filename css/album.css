@@ -1,0 +1,88 @@
+/* =========================================================
+   album.css … アルバム
+   Layout: 探す → ラベルのチップ → アルバムのカード（表紙＋横に2枚重ね）
+           1冊 = 題名・説明・操作 → 写真のタイル（正方形）→ 選んでいるときは下にバー
+           写真を大きく見る = 画面いっぱいの黒い背景、左右の矢印
+   ========================================================= */
+
+.al-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.al-search { position: relative; }
+.al-search .icon { position: absolute; top: 50%; left: 14px; color: var(--ink-2); transform: translateY(-50%); pointer-events: none; }
+.al-search .text-input { padding-left: 40px; }
+.al-stat { color: var(--ink-2); font-size: var(--step--1); white-space: nowrap; }
+
+.al-img { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--surface-2); transition: opacity .2s; }
+.al-img.is-loading { opacity: 0; }
+.al-img.is-missing { opacity: .2; }
+
+.al-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.al-card { display: grid; gap: 0; min-width: 0; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink); text-align: left; transition: transform .15s, box-shadow .15s; }
+.al-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.al-cover { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; aspect-ratio: 4 / 3; background: var(--surface-2); overflow: hidden; }
+.al-cover.has-stack { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.al-cover-side { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; min-height: 0; }
+.al-cover-side .al-img { min-height: 0; }
+.al-cover-empty { display: grid; place-items: center; color: var(--ink-2); font-size: 2rem; }
+.al-card-body { display: grid; gap: 4px; padding: 10px 12px 12px; }
+.al-card-title { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.al-card-meta { color: var(--ink-2); font-size: .75rem; }
+.al-card-labels { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ---------- 1冊の中身 ---------- */
+.al-detail { display: grid; gap: 14px; border-radius: var(--r-lg); transition: background .15s, box-shadow .15s; }
+.al-detail.is-drop { background: color-mix(in srgb, var(--feature) 8%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--feature) 45%, transparent); }
+.al-back { justify-self: start; }
+.al-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px 20px; }
+.al-head-text { display: grid; gap: 6px; min-width: 0; }
+.al-head-text h2 { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: var(--step-3); overflow-wrap: anywhere; }
+.al-note { color: var(--ink-2); line-height: 1.7; white-space: pre-line; }
+.al-head-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--ink-2); font-size: var(--step--1); }
+.al-head-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 460px; }
+.al-head-actions label { cursor: pointer; }
+.al-confirm { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+
+.al-progress { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 10px; padding: 10px 14px; border-radius: var(--r-md); background: color-mix(in srgb, var(--feature) 10%, var(--surface)); font-size: var(--step--1); font-weight: 700; }
+.al-progress-bar { grid-column: 1 / -1; height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.al-progress-bar i { display: block; height: 100%; background: var(--feature); transition: width .2s; }
+
+.al-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px; }
+.al-photo { position: relative; aspect-ratio: 1; padding: 0; overflow: hidden; border: 0; border-radius: 6px; background: var(--surface-2); }
+.al-photo:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.al-photo .al-img { transition: transform .2s, opacity .2s; }
+.al-photo:hover .al-img { transform: scale(1.03); }
+.al-photo.is-cover::after { content: "表紙"; position: absolute; left: 6px; bottom: 6px; padding: 1px 8px; border-radius: 999px; background: rgb(0 0 0 / .55); color: #fff; font-size: .625rem; font-weight: 700; }
+.al-check { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid #fff; border-radius: 50%; background: rgb(0 0 0 / .25); color: transparent; box-shadow: 0 1px 3px rgb(0 0 0 / .3); }
+.al-photo.is-selected .al-check { background: var(--feature); color: #fff; }
+.al-photo.is-selected .al-img { transform: scale(.9); border-radius: 6px; }
+.al-drop { display: grid; justify-items: center; gap: 8px; grid-column: 1 / -1; padding: 48px 20px; border: 2px dashed color-mix(in srgb, var(--feature) 45%, var(--line)); border-radius: var(--r-lg); color: var(--ink-2); text-align: center; cursor: pointer; }
+.al-drop > .icon { font-size: 2.2rem; color: var(--feature); }
+.al-drop strong { color: var(--ink); font-size: var(--step-1); }
+
+.al-select-bar { position: sticky; bottom: 12px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
+.al-select-bar .spacer { flex: 1; }
+.al-sel-count strong { font-size: var(--step-1); margin-right: 2px; }
+
+/* ---------- 写真を大きく見る ---------- */
+.al-viewer { position: fixed; inset: 0; z-index: 900; display: grid; grid-template-rows: auto minmax(0, 1fr); background: #0B0D0C; color: #fff; animation: screen-in .18s ease-out; }
+.al-view-top { display: flex; align-items: center; gap: 8px; padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 8px; }
+.al-view-top .spacer { flex: 1; }
+.al-view-count { font-family: var(--font-mono); font-size: var(--step--1); opacity: .85; }
+.al-view-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; min-width: 44px; justify-content: center; padding: 0 12px; border: 0; border-radius: 999px; background: rgb(255 255 255 / .12); color: #fff; font-weight: 700; }
+.al-view-btn:hover { background: rgb(255 255 255 / .22); }
+.al-view-stage { display: grid; place-items: center; min-height: 0; padding: 8px 8px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.al-view-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; transition: filter .2s; }
+.al-view-img.is-loading { filter: blur(6px); }
+.al-view-nav { position: absolute; top: 50%; display: grid; place-items: center; width: 52px; height: 52px; border: 0; border-radius: 50%; background: rgb(255 255 255 / .14); color: #fff; font-size: 1.5rem; transform: translateY(-50%); }
+.al-view-nav:hover:not(:disabled) { background: rgb(255 255 255 / .26); }
+.al-view-nav:disabled { opacity: 0; pointer-events: none; }
+.al-view-nav.is-prev { left: 12px; }
+.al-view-nav.is-next { right: 12px; }
+
+@media (max-width: 719px) {
+  .al-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .al-tools { grid-template-columns: minmax(0, 1fr); }
+  .al-head { grid-template-columns: minmax(0, 1fr); }
+  .al-head-actions { justify-content: flex-start; max-width: none; }
+  .al-photos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
+  .al-view-nav { display: none; }
+}
